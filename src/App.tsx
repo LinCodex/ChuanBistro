@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Star,
@@ -14,8 +14,6 @@ import {
   Clipboard,
   ExternalLink,
   UtensilsCrossed,
-  Sparkles,
-  MapPin,
   Check,
   Languages,
   Flame,
@@ -135,6 +133,15 @@ const SURVEY_QUESTIONS: SurveyQuestion[] = [
   },
 ];
 
+const MAX_REFRESH = 5;
+
+// Slide direction → motion variants used by the per-question animation.
+const SURVEY_SLIDE_VARIANTS = {
+  initial: (dir: number) => ({opacity: 0, x: dir * 40}),
+  animate: {opacity: 1, x: 0},
+  exit: (dir: number) => ({opacity: 0, x: -dir * 40}),
+};
+
 const SUGGESTIONS = [
   "e.g., The Black Fungus With Wild Pepper was delicious...",
   "e.g., Really enjoyed the Blood Tofu With Pork Intestines...",
@@ -171,30 +178,14 @@ export default function App() {
   const [showRedirectModal, setShowRedirectModal] = useState(false);
   const [randomPlaceholder, setRandomPlaceholder] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [bgIndex, setBgIndex] = useState(0);
   const [surveyIndex, setSurveyIndex] = useState(0);
   const [surveyDirection, setSurveyDirection] = useState<1 | -1>(1);
-
-  const MAX_REFRESH = 5;
-
-  const BACKGROUND_IMAGES = [
-    "/2025-12-30.webp",
-    "/unnamed.webp",
-    "/unnamed_1.webp",
-  ];
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setBgIndex((prev) => (prev + 1) % BACKGROUND_IMAGES.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     const randomIdx = Math.floor(Math.random() * SUGGESTIONS.length);
     setRandomPlaceholder(SUGGESTIONS[randomIdx]);
 
-    // Select 4 random suggestions excluding the one used as placeholder
+    // Select 4 random suggestions excluding the one used as placeholder.
     const available = SUGGESTIONS.filter((_, i) => i !== randomIdx);
     const shuffled = [...available].sort(() => 0.5 - Math.random());
     setSuggestions(shuffled.slice(0, 4));
@@ -269,15 +260,6 @@ export default function App() {
     );
     setShowRedirectModal(false);
   };
-
-  useEffect(() => {
-    // Inject fonts
-    const link = document.createElement("link");
-    link.href =
-      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500;600&display=swap";
-    link.rel = "stylesheet";
-    document.head.appendChild(link);
-  }, []);
 
   return (
     <div className="relative min-h-[100dvh] bg-[#eaeaeb] text-[#1A1A1A] font-sans selection:bg-[#E60000] selection:text-white overflow-x-hidden w-full transition-colors duration-500">
@@ -440,17 +422,7 @@ export default function App() {
                 <motion.div
                   key={surveyIndex}
                   custom={surveyDirection}
-                  variants={{
-                    initial: (dir: number) => ({
-                      opacity: 0,
-                      x: dir * 40,
-                    }),
-                    animate: { opacity: 1, x: 0 },
-                    exit: (dir: number) => ({
-                      opacity: 0,
-                      x: -dir * 40,
-                    }),
-                  }}
+                  variants={SURVEY_SLIDE_VARIANTS}
                   initial="initial"
                   animate="animate"
                   exit="exit"
