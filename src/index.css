@@ -7,11 +7,11 @@
 }
 
 html {
-  /* Dark backdrop so the iOS safe-area zones (notch / home indicator) and any
-     rubber-band overscroll show as an intentional dark frame instead of the
-     off-white the user perceived as "white borders". The actual page content
-     is painted in App.tsx via a fixed-position #eaeaeb backdrop on top. */
-  background-color: #1A1A1A;
+  /* Paint the iOS safe-area zones (notch / home indicator) and any
+     rubber-band overscroll the SAME off-white as the main app background
+     so the top and bottom strips look continuous with the page instead
+     of as a separate frame. */
+  background-color: #eaeaeb;
   min-height: 100vh;
   min-height: 100dvh;
   height: -webkit-fill-available;
@@ -25,7 +25,7 @@ html {
 }
 
 body {
-  background-color: #1A1A1A;
+  background-color: #eaeaeb;
   margin: 0;
   min-height: 100vh;
   min-height: 100dvh;

@@ -17,6 +17,7 @@ import {
   ChevronRight,
   ChevronLeft,
   ArrowRight,
+  Plus,
   RefreshCcw,
   Clipboard,
   ExternalLink,
@@ -148,7 +149,7 @@ const SURVEY_QUESTIONS: SurveyQuestion[] = [
 
 const MAX_REFRESH = 5;
 
-// Slide direction — motion variants used by the per-question animation.
+// Slide direction ??? motion variants used by the per-question animation.
 const SURVEY_SLIDE_VARIANTS = {
   initial: (dir: number) => ({opacity: 0, x: dir * 40}),
   animate: {opacity: 1, x: 0},
@@ -235,7 +236,7 @@ const RatingStep = memo(function RatingStep({
       </div>
 
       <div className="flex-1 flex flex-col justify-center items-center gap-8 sm:gap-10 my-2">
-        {/* Stars row — plain buttons + Tailwind active scale, no motion. */}
+        {/* Stars row ??? plain buttons + Tailwind active scale, no motion. */}
         <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -297,7 +298,7 @@ const RatingStep = memo(function RatingStep({
           </AnimatePresence>
         </m.div>
 
-        {/* Custom slider — visual track + fill are plain divs (no spring on
+        {/* Custom slider ??? visual track + fill are plain divs (no spring on
             width so drag is instant); native input sits on top with only
             its thumb styled. */}
         <m.div
@@ -395,18 +396,31 @@ export default function App() {
   const [isCopying, setIsCopying] = useState(false);
   const [showRedirectModal, setShowRedirectModal] = useState(false);
   const [randomPlaceholder, setRandomPlaceholder] = useState("");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  // Index for the inline shuffling suggestion pill that lives inside the
+  // Comments textarea. Rotates through every entry in SUGGESTIONS so the
+  // user always sees variety without ever having to scroll a chip row.
+  const [suggestionIdx, setSuggestionIdx] = useState(0);
   const [surveyIndex, setSurveyIndex] = useState(0);
   const [surveyDirection, setSurveyDirection] = useState<1 | -1>(1);
 
   useEffect(() => {
     const randomIdx = Math.floor(Math.random() * SUGGESTIONS.length);
     setRandomPlaceholder(SUGGESTIONS[randomIdx]);
+    // Start the inline shuffle at a different random position so the
+    // pill and the placeholder don't show the same line on first paint.
+    setSuggestionIdx(
+      (randomIdx + 1 + Math.floor(Math.random() * (SUGGESTIONS.length - 1))) %
+        SUGGESTIONS.length,
+    );
+  }, []);
 
-    // Select 4 random suggestions excluding the one used as placeholder.
-    const available = SUGGESTIONS.filter((_, i) => i !== randomIdx);
-    const shuffled = [...available].sort(() => 0.5 - Math.random());
-    setSuggestions(shuffled.slice(0, 4));
+  // Auto-rotate the inline suggestion every 3.5s. Pure setInterval ?
+  // setSuggestionIdx is the only state update so re-render is cheap.
+  useEffect(() => {
+    const id = setInterval(() => {
+      setSuggestionIdx((i) => (i + 1) % SUGGESTIONS.length);
+    }, 3500);
+    return () => clearInterval(id);
   }, []);
 
   const handleOptionSelect = useCallback(
@@ -503,7 +517,7 @@ export default function App() {
   return (
     <div className="relative min-h-[100dvh] bg-[#eaeaeb] text-[#1A1A1A] font-sans selection:bg-[#E60000] selection:text-white overflow-x-hidden w-full">
       {/*
-        Background — pure CSS, no React or JS in the animation loop. Two
+        Background ??? pure CSS, no React or JS in the animation loop. Two
         compositor-only blob layers replace the previous four animated
         blobs + grain overlay (all five used 90-130px blurs which the GPU
         was re-blurring every frame). See .bg-blob-* in index.css.
@@ -528,12 +542,12 @@ export default function App() {
               className="flex-1 flex flex-col h-full overflow-hidden pb-4"
             >
               {/* Header */}
-              <div className="flex justify-between items-start w-full mix-blend-difference text-[white]/80">
-                <div className="font-semibold tracking-[0.2em] leading-snug text-[10px] sm:text-xs uppercase pt-2">
+              <div className="flex justify-between items-start w-full">
+                <div className="font-semibold tracking-[0.2em] leading-snug text-[10px] sm:text-xs uppercase pt-2 text-[#1A1A1A]">
                   <p>Chuan Bistro</p>
                   <p>Review</p>
                 </div>
-                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border border-white/20 bg-black/25 flex items-center justify-center text-white shadow-lg mix-blend-normal z-20">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border border-white/10 bg-[#1A1A1A] flex items-center justify-center text-white shadow-lg z-20">
                   <span className="text-xl sm:text-2xl font-semibold">叙</span>
                 </div>
               </div>
@@ -574,7 +588,7 @@ export default function App() {
             </m.div>
           )}
 
-          {/* Survey Step — one question per screen */}
+          {/* Survey Step ??? one question per screen */}
           {step === "survey" && (
             <m.div
               key="survey"
@@ -583,7 +597,7 @@ export default function App() {
               exit={{ opacity: 0 }}
               className="flex-1 flex flex-col py-2 max-w-xl mx-auto w-full"
             >
-              {/* Progress segments — CSS transitions instead of motion. */}
+              {/* Progress segments ??? CSS transitions instead of motion. */}
               <div className="flex items-center justify-center gap-2 pt-2">
                 {SURVEY_QUESTIONS.map((q, idx) => {
                   const isActive = idx === surveyIndex;
@@ -639,7 +653,7 @@ export default function App() {
                           </m.p>
                         </div>
 
-                        {/* Option cards — plain buttons + CSS for entrance,
+                        {/* Option cards ??? plain buttons + CSS for entrance,
                             tap, and selection states. No motion components
                             here so taps stay on the compositor thread. */}
                         <div className="flex-1 flex flex-col justify-center gap-3 my-2">
@@ -661,7 +675,7 @@ export default function App() {
                                     : "bg-white/85 border-white hover:border-[#E60000]/40 hover:bg-white text-[#1A1A1A]"
                                 }`}
                               >
-                                {/* Selected glow — single span, opacity
+                                {/* Selected glow ??? single span, opacity
                                     transitions live on the compositor. */}
                                 <span
                                   className={`pointer-events-none absolute -inset-px rounded-3xl bg-gradient-to-br from-[#E60000]/40 via-transparent to-transparent transition-opacity duration-300 ${
@@ -744,7 +758,7 @@ export default function App() {
             </m.div>
           )}
 
-          {/* Rating Step — extracted into its own memoized component so the
+          {/* Rating Step ??? extracted into its own memoized component so the
               slider drag updates only that subtree's local state, never the
               full App. */}
           {step === "rating" && (
@@ -775,38 +789,69 @@ export default function App() {
                 </p>
               </div>
 
-              <div className="flex-1 flex flex-col min-h-[150px] my-2">
-                <textarea
-                  value={results.comments}
-                  onChange={(e) =>
-                    handleOptionSelect("comments", e.target.value)
-                  }
-                  placeholder={randomPlaceholder}
-                  className="flex-1 w-full p-6 bg-white/90 border-2 border-white focus:bg-white rounded-[2rem] outline-none focus:border-[#E60000]/50 transition-all duration-300 resize-none text-lg shadow-sm focus:shadow-md"
-                />
-              </div>
+              {(() => {
+                // Strip the "e.g.," prefix and trailing "..." from the
+                // current rotating suggestion so the inline pill reads as a
+                // natural snippet (the trailing/leading bits only made sense
+                // when the suggestion was a placeholder).
+                const currentSuggestion = (
+                  SUGGESTIONS[suggestionIdx] || ""
+                )
+                  .replace("e.g., ", "")
+                  .replace("...", "");
+                const addCurrentSuggestion = () => {
+                  const newComments = results.comments
+                    ? `${results.comments}, ${currentSuggestion}`
+                    : currentSuggestion;
+                  handleOptionSelect("comments", newComments);
+                };
+                return (
+                  <div className="flex-1 flex flex-col min-h-[200px] my-2 relative">
+                    <textarea
+                      value={results.comments}
+                      onChange={(e) =>
+                        handleOptionSelect("comments", e.target.value)
+                      }
+                      placeholder={randomPlaceholder}
+                      className="flex-1 w-full p-6 pb-16 sm:pb-20 bg-white/90 border-2 border-white focus:bg-white rounded-[2rem] outline-none focus:border-[#E60000]/50 transition-all duration-300 resize-none text-lg shadow-sm focus:shadow-md"
+                    />
 
-              <div className="flex flex-wrap gap-2 justify-center pb-2">
-                {(suggestions || []).map((suggestion, idx) => {
-                  const suggestionText = (suggestion || "")
-                    .replace("e.g., ", "")
-                    .replace("...", "");
-                  return (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        const newComments = results.comments
-                          ? `${results.comments}, ${suggestionText}`
-                          : suggestionText;
-                        handleOptionSelect("comments", newComments);
-                      }}
-                      className="px-4 py-2 bg-white/85 shadow-sm text-[13px] text-[#57534E] font-medium rounded-full hover:bg-white hover:text-[#1A1A1A] hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 border border-white/50 cursor-pointer"
-                    >
-                      + {suggestionText}
-                    </button>
-                  );
-                })}
-              </div>
+                    {/* Inline shuffling suggestion pill — pinned to the
+                        bottom of the textarea. The pill is sized to its
+                        content so the + button naturally trails the text:
+                        short suggestions — short pill, the + sits right
+                        after the text; long suggestions — pill widens up
+                        to the textarea width before the text truncates. */}
+                    <div className="absolute bottom-3 sm:bottom-4 left-4 right-4 flex justify-start pointer-events-none">
+                      <AnimatePresence mode="wait">
+                        <m.div
+                          key={suggestionIdx}
+                          initial={{ opacity: 0, x: 16 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -16 }}
+                          transition={{
+                            duration: 0.28,
+                            ease: [0.4, 0, 0.2, 1],
+                          }}
+                          className="inline-flex items-center gap-2 max-w-full pl-3 pr-1 py-1 bg-white border border-[#E60000]/20 rounded-full shadow-sm pointer-events-auto"
+                        >
+                          <span className="text-[12px] sm:text-[13px] text-[#57534E] font-medium truncate min-w-0">
+                            {currentSuggestion}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={addCurrentSuggestion}
+                            className="shrink-0 w-7 h-7 rounded-full bg-[#E60000] text-white flex items-center justify-center hover:bg-[#CC0000] active:scale-90 transition-all shadow-sm shadow-[#E60000]/30"
+                            aria-label={`Add suggestion: ${currentSuggestion}`}
+                          >
+                            <Plus className="w-4 h-4" strokeWidth={3} />
+                          </button>
+                        </m.div>
+                      </AnimatePresence>
+                    </div>
+                  </div>
+                );
+              })()}
 
               <div className="pt-2 mt-auto">
                 <button
