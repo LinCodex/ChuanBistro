@@ -45,6 +45,179 @@ body {
   }
 }
 
+/* ---------------------------------------------------------------------------
+   GPU-only background blobs.
+   The previous Framer Motion blobs ran scale + x + y + rotate animations on
+   four 100vw blurred elements (blur radius 90-130px) every frame. That work
+   happened on the JS thread and forced the compositor to re-blur ~46 million
+   pixels per layer per frame, which is the main reason the page felt laggy.
+   These keyframes only animate transform + opacity so they live entirely on
+   the compositor thread, no React or main-thread work in the loop.
+   --------------------------------------------------------------------------- */
+
+@keyframes blob-drift-1 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(-40px, 50px, 0) scale(1.06);
+  }
+  66% {
+    transform: translate3d(30px, -30px, 0) scale(0.96);
+  }
+}
+
+@keyframes blob-drift-2 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  33% {
+    transform: translate3d(50px, -40px, 0) scale(1.08);
+  }
+  66% {
+    transform: translate3d(-30px, 40px, 0) scale(0.95);
+  }
+}
+
+.bg-blob {
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(40px);
+  will-change: transform;
+}
+
+@media (min-width: 640px) {
+  .bg-blob {
+    filter: blur(60px);
+  }
+}
+
+.bg-blob-1 {
+  top: -20%;
+  right: -25%;
+  width: 80vw;
+  /* Combines the old "Maroon Blob 1" and the deep dark spot into one
+     radial gradient, removing two extra compositing layers. */
+  background: radial-gradient(
+    circle at 35% 35%,
+    #4d0000 0%,
+    #cc0000 35%,
+    #990000 60%,
+    transparent 75%
+  );
+  opacity: 0.85;
+  animation: blob-drift-1 24s ease-in-out infinite;
+}
+
+.bg-blob-2 {
+  bottom: -25%;
+  left: -25%;
+  width: 80vw;
+  background: radial-gradient(
+    circle at 60% 60%,
+    #d6cdc8 0%,
+    rgba(214, 205, 200, 0.3) 50%,
+    transparent 70%
+  );
+  opacity: 0.65;
+  animation: blob-drift-2 30s ease-in-out infinite;
+}
+
+/* Loading-screen chili — replaces motion.img with CSS keyframes. */
+@keyframes chili-wobble {
+  0%,
+  100% {
+    transform: rotate(-15deg);
+  }
+  50% {
+    transform: rotate(15deg);
+  }
+}
+
+.chili-loader {
+  animation: chili-wobble 1.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Arrow nudges on CTAs — replaces motion.div infinite x-loops. */
+@keyframes arrow-nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+.arrow-nudge {
+  animation: arrow-nudge 1.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes arrow-bounce {
+  0%,
+  100% {
+    transform: translateX(-3px);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+}
+
+.arrow-bounce {
+  animation: arrow-bounce 1.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Option-card entrance + selected check badge — also CSS so the option
+   cards no longer need to be motion components. */
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-enter {
+  animation: card-enter 0.4s ease-out both;
+  will-change: opacity, transform;
+}
+
+@keyframes badge-pop {
+  from {
+    opacity: 0;
+    transform: scale(0) rotate(-90deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.check-badge {
+  animation: badge-pop 0.3s cubic-bezier(0.4, 1.6, 0.6, 1) both;
+  will-change: opacity, transform;
+}
+
+/* Honor user reduced-motion preference: kill all looping animations. */
+@media (prefers-reduced-motion: reduce) {
+  .bg-blob,
+  .chili-loader,
+  .arrow-nudge,
+  .arrow-bounce {
+    animation: none;
+  }
+}
+
 /* Rating slider — visible track is rendered as siblings in JSX; here we only
    style the native thumb so it sits on top of the visual track. */
 .rating-slider {

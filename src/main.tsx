@@ -1,5 +1,6 @@
 import {Component, StrictMode, type ReactNode} from 'react';
 import {createRoot} from 'react-dom/client';
+import {LazyMotion, domAnimation} from 'motion/react';
 import App from './App.tsx';
 import './index.css';
 
@@ -73,7 +74,16 @@ class ErrorBoundary extends Component<{children: ReactNode}, ErrorBoundaryState>
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ErrorBoundary>
-      <App />
+      {/*
+        LazyMotion + the `domAnimation` feature pack ships only the
+        animation features actually in use (~17 KB) instead of the full
+        ~94 KB Framer bundle. `strict` enforces that we use `m.X`
+        components everywhere instead of `motion.X` so we never
+        accidentally re-balloon the bundle.
+      */}
+      <LazyMotion features={domAnimation} strict>
+        <App />
+      </LazyMotion>
     </ErrorBoundary>
   </StrictMode>,
 );
