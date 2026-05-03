@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: "Montserrat", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+html {
+  background-color: #eaeaeb;
+  min-height: 100vh;
+  min-height: 100dvh;
+  /* Fill the iOS safe-area zones (notch / home indicator) with the page color
+     so the browser doesn't render its default white bars there. */
+  height: -webkit-fill-available;
+}
+
+body {
+  background-color: #eaeaeb;
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+  /* Prevent overscroll background (rubber-banding on iOS) from showing white. */
+  overscroll-behavior: none;
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
