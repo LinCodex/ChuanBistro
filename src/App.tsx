@@ -518,15 +518,8 @@ export default function App() {
                 />
                 <div className="absolute top-0 inset-x-0 h-[40%] bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
 
-                {/* Seamless bottom blur blending into the cream background */}
-                <div 
-                  className="absolute bottom-0 inset-x-0 h-[25%] pointer-events-none backdrop-blur-md" 
-                  style={{ 
-                    maskImage: 'linear-gradient(to top, black 10%, transparent 100%)', 
-                    WebkitMaskImage: 'linear-gradient(to top, black 10%, transparent 100%)' 
-                  }}
-                />
-                <div className="absolute bottom-0 inset-x-0 h-[30%] bg-gradient-to-t from-[#FAF5ED] to-transparent pointer-events-none" />
+                {/* Seamless bottom blend into the cream background */}
+                <div className="absolute bottom-[-1px] inset-x-0 h-[20%] bg-gradient-to-t from-[#FAF5ED] via-[#FAF5ED]/70 to-transparent pointer-events-none" />
               </div>
 
               <div className="absolute top-6 inset-x-0 px-6 sm:top-8 sm:px-8 z-20 flex items-baseline gap-2">
