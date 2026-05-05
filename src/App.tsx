@@ -498,8 +498,9 @@ export default function App() {
               exit={{ opacity: 0 }}
               className="flex-1 flex flex-col h-full overflow-hidden"
             >
-              <div className="absolute top-8 left-8 z-20 font-serif font-extrabold text-[#111] tracking-widest text-2xl uppercase">
-                Chuan Bistro
+              <div className="absolute top-8 left-8 z-20 flex items-baseline gap-2">
+                <span className="font-serif font-extrabold text-[#111] tracking-widest text-2xl uppercase">Chuan Bistro</span>
+                <span className="font-serif font-bold text-[#C5A254] text-xl tracking-wide">三杯叙</span>
               </div>
               <div className="relative h-[55dvh] w-full pt-20 px-6 pb-2 mt-4">
                 {['/dish1.png', '/dish2.png', '/dish3.png', '/dish4.png'].map((src, i) => (

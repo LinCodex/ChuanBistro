@@ -6,14 +6,28 @@ export interface SurveyResults {
   comments?: string;
 }
 
-const API_KEY = "AIzaSyAhM1cGz2J1GbJF5vyUomwsgNNXy2XWWFc";
+function getApiKey(): string {
+  return (
+    ((import.meta as ImportMeta).env?.VITE_GEMINI_API_KEY as string) || ""
+  );
+}
 
 export async function generateReview(
   results: SurveyResults,
   language: "en" | "cn" = "en",
 ): Promise<string> {
+  const apiKey = getApiKey();
+  if (!apiKey) {
+    console.warn(
+      "[gemini] No API key configured. Set VITE_GEMINI_API_KEY in your .env file.",
+    );
+    return language === "en"
+      ? "API key not configured. Add VITE_GEMINI_API_KEY to your .env file."
+      : "API 密钥未配置。请在 .env 文件中添加 VITE_GEMINI_API_KEY。";
+  }
+
   const prompt = `
-You are helping a real customer write a Google Maps review for "Chuan Bistro" in Flushing, NY.
+You are helping a real customer write a Google Maps review for "Chuan Bistro" (三杯叙) in Flushing, NY.
 
 Here is what the customer told us about their visit:
 - They described the food as: ${results.food}
@@ -33,13 +47,13 @@ Critical rules you MUST follow:
 6. If the customer mentioned specific dishes or details, naturally weave those in.
 7. Make the tone match the rating. A 5 star review should be enthusiastic but real. A 3 star review should be balanced.
 8. Every review must be unique. Vary sentence structure, opening lines, and phrasing. Do NOT start with "Went to" or "Visited" every time. Mix it up.
-9. If writing in Chinese, refer to the restaurant as "川小叙".
+9. If writing in Chinese, refer to the restaurant as "三杯叙".
 10. Output ONLY the review text. No quotes, no labels, no extra formatting.
 `;
 
   try {
     const { GoogleGenAI } = await import("@google/genai");
-    const ai = new GoogleGenAI({ apiKey: API_KEY });
+    const ai = new GoogleGenAI({ apiKey });
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: prompt,
