@@ -373,21 +373,12 @@ export default function App() {
   const [suggestionIdx, setSuggestionIdx] = useState(0);
   const [surveyIndex, setSurveyIndex] = useState(0);
   const [surveyDirection, setSurveyDirection] = useState<1 | -1>(1);
-  const [imageIndex, setImageIndex] = useState(0);
 
   // Auto-rotate the placeholder suggestion every 4s.
   useEffect(() => {
     const id = setInterval(() => {
       setSuggestionIdx((i) => (i + 1) % SUGGESTIONS.length);
     }, 4000);
-    return () => clearInterval(id);
-  }, []);
-
-  // Auto-rotate welcome screen images
-  useEffect(() => {
-    const id = setInterval(() => {
-      setImageIndex((i) => (i + 1) % 4);
-    }, 4500);
     return () => clearInterval(id);
   }, []);
 
@@ -496,31 +487,30 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex-1 flex flex-col h-full overflow-hidden"
+              className="flex-1 flex flex-col h-full relative"
             >
+              {/* Full-bleed Black Background for top half separator */}
+              <div className="absolute top-[-10dvh] left-1/2 -translate-x-1/2 w-[150vw] h-[70dvh] bg-[#000] rounded-b-[4rem] sm:rounded-b-[6rem] z-0 shadow-2xl" />
+
               <div className="absolute top-8 left-8 z-20 flex items-baseline gap-2">
-                <span className="font-serif font-extrabold text-[#111] tracking-widest text-2xl uppercase">Chuan Bistro</span>
+                <span className="font-serif font-extrabold text-white tracking-widest text-2xl uppercase">Chuan Bistro</span>
                 <span className="font-serif font-bold text-[#C5A254] text-xl tracking-wide">三杯叙</span>
               </div>
-              <div className="relative h-[55dvh] w-full pt-20 px-6 pb-2 mt-4">
-                {['/dish1.png', '/dish2.png', '/dish3.png', '/dish4.png'].map((src, i) => (
-                  <m.img
-                    key={src}
-                    src={src}
-                    alt="Signature Dish"
-                    className="absolute inset-x-6 top-24 bottom-2 object-cover rounded-[2.5rem] shadow-2xl w-[calc(100%-3rem)] h-[calc(100%-6rem)]"
-                    initial={{ scale: 0.95, opacity: 0 }}
-                    animate={{ 
-                      scale: i === imageIndex ? 1 : 0.95, 
-                      opacity: i === imageIndex ? 1 : 0 
-                    }}
-                    transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
-                    style={{ pointerEvents: i === imageIndex ? "auto" : "none" }}
-                  />
-                ))}
+              <div className="relative h-[55dvh] w-full pt-20 px-6 pb-2 mt-4 z-10">
+                <m.video
+                  src="https://chuanbistro.com/wp-content/themes/chuan-bistro/assets/Hero%20Video-C9Qrq4r7.mp4"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="absolute inset-x-6 top-24 bottom-2 object-cover rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl w-[calc(100%-3rem)] h-[calc(100%-6rem)]"
+                  initial={{ scale: 0.95, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 1, ease: [0.4, 0, 0.2, 1] }}
+                />
               </div>
 
-              <div className="px-6 sm:px-8 py-8 flex-1 flex flex-col justify-end pb-12">
+              <div className="px-6 sm:px-8 py-8 flex-1 flex flex-col justify-end pb-12 z-10 relative">
                 <m.h1 
                   initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
                   className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[1.05] text-[#111]"
