@@ -785,11 +785,16 @@ export default function App() {
               exit={{ opacity: 0 }}
               className="flex-1 flex flex-col justify-center items-center space-y-8"
             >
-              <div className="relative w-32 h-32 flex items-center justify-center">
-                <img
-                  src="/chili.svg"
-                  alt="Loading animation"
-                  className="chili-loader w-full h-full object-contain"
+              <div className="relative w-16 h-16 flex items-center justify-center">
+                <div className="absolute inset-0 border-[3px] border-[#DC2626]/20 rounded-full" />
+                <m.div
+                  className="absolute inset-0 border-[3px] border-[#DC2626] rounded-full border-t-transparent"
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    duration: 1,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
                 />
               </div>
               <div className="text-center space-y-2">
