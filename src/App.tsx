@@ -399,31 +399,15 @@ export default function App() {
   const [refreshCount, setRefreshCount] = useState(0);
   const [isCopying, setIsCopying] = useState(false);
   const [showRedirectModal, setShowRedirectModal] = useState(false);
-  const [randomPlaceholder, setRandomPlaceholder] = useState("");
-  // Index for the inline shuffling suggestion pill that lives inside the
-  // Comments textarea. Rotates through every entry in SUGGESTIONS so the
-  // user always sees variety without ever having to scroll a chip row.
   const [suggestionIdx, setSuggestionIdx] = useState(0);
   const [surveyIndex, setSurveyIndex] = useState(0);
   const [surveyDirection, setSurveyDirection] = useState<1 | -1>(1);
 
-  useEffect(() => {
-    const randomIdx = Math.floor(Math.random() * SUGGESTIONS.length);
-    setRandomPlaceholder(SUGGESTIONS[randomIdx]);
-    // Start the inline shuffle at a different random position so the
-    // pill and the placeholder don't show the same line on first paint.
-    setSuggestionIdx(
-      (randomIdx + 1 + Math.floor(Math.random() * (SUGGESTIONS.length - 1))) %
-        SUGGESTIONS.length,
-    );
-  }, []);
-
-  // Auto-rotate the inline suggestion every 3.5s. Pure setInterval ?
-  // setSuggestionIdx is the only state update so re-render is cheap.
+  // Auto-rotate the placeholder suggestion every 4s.
   useEffect(() => {
     const id = setInterval(() => {
       setSuggestionIdx((i) => (i + 1) % SUGGESTIONS.length);
-    }, 3500);
+    }, 4000);
     return () => clearInterval(id);
   }, []);
 
@@ -775,69 +759,16 @@ export default function App() {
                 </p>
               </div>
 
-              {(() => {
-                // Strip the "e.g.," prefix and trailing "..." from the
-                // current rotating suggestion so the inline pill reads as a
-                // natural snippet (the trailing/leading bits only made sense
-                // when the suggestion was a placeholder).
-                const currentSuggestion = (
-                  SUGGESTIONS[suggestionIdx] || ""
-                )
-                  .replace("e.g., ", "")
-                  .replace("...", "");
-                const addCurrentSuggestion = () => {
-                  const newComments = results.comments
-                    ? `${results.comments}, ${currentSuggestion}`
-                    : currentSuggestion;
-                  handleOptionSelect("comments", newComments);
-                };
-                return (
-                  <div className="flex-1 flex flex-col min-h-[200px] my-2 relative">
+                  <div className="flex-1 flex flex-col min-h-[200px] my-2 relative px-6">
                     <textarea
                       value={results.comments}
                       onChange={(e) =>
                         handleOptionSelect("comments", e.target.value)
                       }
-                      placeholder={randomPlaceholder}
-                      className="flex-1 w-full p-6 pb-16 sm:pb-20 bg-white border border-[#E5E5E5] rounded-2xl outline-none focus:border-[#111] transition-all duration-300 resize-none text-base shadow-sm focus:shadow-md text-[#111]"
+                      placeholder={SUGGESTIONS[suggestionIdx]}
+                      className="flex-1 w-full p-6 sm:p-8 bg-white border border-[#E5E5E5] rounded-2xl outline-none focus:border-[#111] transition-all duration-300 resize-none text-base sm:text-lg shadow-sm focus:shadow-md text-[#111] placeholder-[#A8A29E]"
                     />
-
-                    {/* Inline shuffling suggestion pill — pinned to the
-                        bottom of the textarea. The pill is sized to its
-                        content so the + button naturally trails the text:
-                        short suggestions — short pill, the + sits right
-                        after the text; long suggestions — pill widens up
-                        to the textarea width before the text truncates. */}
-                    <div className="absolute bottom-3 sm:bottom-4 left-6 right-6 flex justify-start pointer-events-none">
-                      <AnimatePresence mode="wait">
-                        <m.div
-                          key={suggestionIdx}
-                          initial={{ opacity: 0, y: 4 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -4 }}
-                          transition={{
-                            duration: 0.2,
-                            ease: "easeOut",
-                          }}
-                          className="inline-flex items-center gap-1.5 max-w-full pointer-events-auto"
-                        >
-                          <span className="text-[13px] sm:text-[14px] text-[#A8A29E] font-medium truncate min-w-0">
-                            {currentSuggestion}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={addCurrentSuggestion}
-                            className="shrink-0 text-[#A8A29E] hover:text-[#111] transition-colors p-1 active:scale-90"
-                            aria-label={`Add suggestion: ${currentSuggestion}`}
-                          >
-                            <Plus className="w-4 h-4" strokeWidth={3} />
-                          </button>
-                        </m.div>
-                      </AnimatePresence>
-                    </div>
                   </div>
-                );
-              })()}
 
               <div className="pt-6 pb-8 px-6 mt-auto">
                 <button
