@@ -6,61 +6,42 @@ export interface SurveyResults {
   comments?: string;
 }
 
-// Read the key from either the Vite-standard `VITE_GEMINI_API_KEY` or the
-// legacy `process.env.GEMINI_API_KEY` (kept working via vite.config `define`).
-// Both are static-replaced at build time so this is safe to run anywhere.
-function getApiKey(): string {
-  const viteKey =
-    (import.meta as ImportMeta).env?.VITE_GEMINI_API_KEY as string | undefined;
-  const procKey =
-    typeof process !== "undefined" && process.env
-      ? (process.env.GEMINI_API_KEY as string | undefined)
-      : undefined;
-  return viteKey || procKey || "";
-}
+const API_KEY = "AIzaSyAhM1cGz2J1GbJF5vyUomwsgNNXy2XWWFc";
 
 export async function generateReview(
   results: SurveyResults,
   language: "en" | "cn" = "en",
 ): Promise<string> {
-  const apiKey = getApiKey();
-  if (!apiKey) {
-    // No throw — return a friendly message so the UI keeps working.
-    console.warn(
-      "[gemini] No API key configured. Set VITE_GEMINI_API_KEY (or GEMINI_API_KEY) in your deploy environment.",
-    );
-    return language === "en"
-      ? "AI is not configured for this deployment yet. Add a Gemini API key to enable review generation."
-      : "AI 服务尚未配置。请添加 Gemini API 密钥后再生成评论。";
-  }
-
   const prompt = `
-    You are a customer of "Chuan Bistro 三杯叙" in Flushing, NY.
-    Based on the following experience metrics, write a short, authentic-sounding review.
+You are helping a real customer write a Google Maps review for "Chuan Bistro" in Flushing, NY.
 
-    Metrics:
-    - Food Quality: ${results.food}
-    - Service: ${results.service}
-    - Atmosphere: ${results.atmosphere}
-    - Overall Star Rating (out of 5): ${results.rating}/5
-    - Additional Comments: ${results.comments || "None"}
+Here is what the customer told us about their visit:
+- They described the food as: ${results.food}
+- They described the service as: ${results.service}
+- They described the atmosphere/vibe as: ${results.atmosphere}
+- Their overall rating: ${results.rating} out of 5
+- Their own additional details: ${results.comments || "nothing specific mentioned"}
 
-    Requirements:
-    - Language: ${language === "en" ? "English" : "Chinese (Simplified)"}
-    - Style: Friendly, helpful, and natural (avoid sounding like a robot).
-    - Length: 2-3 sentences.
-    - NEVER use hyphens or dashes (-) in the output.
+Write a review in ${language === "en" ? "English" : "Simplified Chinese"} that sounds like a normal, everyday person posting on Google Maps. NOT a food blogger, NOT an influencer, NOT a marketing person. Just a regular customer sharing their honest experience.
 
-    If Chinese, include the name "三杯叙".
-  `;
+Critical rules you MUST follow:
+1. NEVER use hyphens (-) or dashes anywhere in the review.
+2. NEVER use emojis.
+3. NEVER use over the top words like "incredible", "amazing", "absolutely", "game changer", "next level", "must try", "blown away", "obsessed", "divine", "exquisite", "impeccable", "phenomenal", "spectacular".
+4. Use simple, conversational language. Think about how a normal person actually talks.
+5. Keep it 3 to 5 sentences long.
+6. If the customer mentioned specific dishes or details, naturally weave those in.
+7. Make the tone match the rating. A 5 star review should be enthusiastic but real. A 3 star review should be balanced.
+8. Every review must be unique. Vary sentence structure, opening lines, and phrasing. Do NOT start with "Went to" or "Visited" every time. Mix it up.
+9. If writing in Chinese, refer to the restaurant as "川小叙".
+10. Output ONLY the review text. No quotes, no labels, no extra formatting.
+`;
 
   try {
-    // Dynamic import keeps the ~150KB SDK out of the initial bundle —
-    // it only loads when the user reaches the "generating" step.
     const { GoogleGenAI } = await import("@google/genai");
-    const ai = new GoogleGenAI({ apiKey });
+    const ai = new GoogleGenAI({ apiKey: API_KEY });
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-2.0-flash",
       contents: prompt,
     });
     return (
