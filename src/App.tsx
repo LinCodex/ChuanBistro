@@ -508,7 +508,7 @@ export default function App() {
                   animate={{ scale: 1, opacity: 1 }}
                   transition={{ duration: 1.2, ease: [0.4, 0, 0.2, 1] }}
                 />
-                {/* Gradual blur for top 1/4 */}
+                {/* Gradual blur for top 1/4 (Logo readability) */}
                 <div 
                   className="absolute top-0 inset-x-0 h-[40%] pointer-events-none backdrop-blur-md" 
                   style={{ 
@@ -517,6 +517,16 @@ export default function App() {
                   }}
                 />
                 <div className="absolute top-0 inset-x-0 h-[40%] bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
+
+                {/* Seamless bottom blur blending into the cream background */}
+                <div 
+                  className="absolute bottom-0 inset-x-0 h-[25%] pointer-events-none backdrop-blur-md" 
+                  style={{ 
+                    maskImage: 'linear-gradient(to top, black 10%, transparent 100%)', 
+                    WebkitMaskImage: 'linear-gradient(to top, black 10%, transparent 100%)' 
+                  }}
+                />
+                <div className="absolute bottom-0 inset-x-0 h-[30%] bg-gradient-to-t from-[#FAF5ED] to-transparent pointer-events-none" />
               </div>
 
               <div className="absolute top-6 inset-x-0 px-6 sm:top-8 sm:px-8 z-20 flex items-baseline gap-2">
@@ -530,9 +540,9 @@ export default function App() {
               <div className="px-6 sm:px-8 py-8 flex-1 flex flex-col justify-end pb-12 z-10 relative">
                 <m.h1 
                   initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
-                  className="text-4xl min-[400px]:text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[1.05] text-[#111]"
+                  className="text-[clamp(2.2rem,8.5vw,3rem)] min-[400px]:text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[1.05] text-[#111]"
                 >
-                  <span className="whitespace-nowrap">Craft your perfect</span><br/>review.
+                  Craft your perfect<br/>review.
                 </m.h1>
                 
                 <m.div 
