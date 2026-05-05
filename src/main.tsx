@@ -19,7 +19,9 @@ class ErrorBoundary extends Component<{children: ReactNode}, ErrorBoundaryState>
   }
 
   componentDidCatch(error: Error, info: unknown): void {
-    console.error('Unhandled application error:', error, info);
+    if (import.meta.env.DEV) {
+      console.error('Unhandled application error:', error, info);
+    }
   }
 
   render() {
