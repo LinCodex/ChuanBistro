@@ -75,7 +75,9 @@ Critical rules you MUST follow:
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     try {
       const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        // TEAM_001: Use stable gemini-2.5-flash instead of gemini-3-flash-preview.
+        // Preview models have severely restricted free tier rate limits.
+        model: "gemini-2.5-flash",
         contents: prompt,
       });
       const text = response.text?.trim();
@@ -89,8 +91,8 @@ Critical rules you MUST follow:
         || error?.message?.includes("RESOURCE_EXHAUSTED");
 
       if (is429 && attempt < MAX_RETRIES) {
-        // Exponential backoff: 1s, 2s, 4s
-        await new Promise((r) => setTimeout(r, 1000 * Math.pow(2, attempt)));
+        // Exponential backoff: 2s, 4s, 8s
+        await new Promise((r) => setTimeout(r, 2000 * Math.pow(2, attempt)));
         continue;
       }
 
