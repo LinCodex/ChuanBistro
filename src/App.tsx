@@ -41,7 +41,8 @@ type Step =
   | "rating"
   | "comments"
   | "generating"
-  | "result";
+  | "result"
+  | "error";
 
 interface Option {
   label: string;
@@ -433,24 +434,34 @@ export default function App() {
 
   const handleGenerate = async () => {
     setStep("generating");
-    const [en, cn] = await Promise.all([
-      generateReview(results, "en"),
-      generateReview(results, "cn"),
-    ]);
-    setReviews({ en, cn });
-    setStep("result");
+    try {
+      const [en, cn] = await Promise.all([
+        generateReview(results, "en"),
+        generateReview(results, "cn"),
+      ]);
+      setReviews({ en, cn });
+      setStep("result");
+    } catch (error) {
+      console.error(error);
+      setStep("error");
+    }
   };
 
   const handleRefresh = async () => {
     if (refreshCount >= MAX_REFRESH) return;
     setStep("generating");
-    const [en, cn] = await Promise.all([
-      generateReview(results, "en"),
-      generateReview(results, "cn"),
-    ]);
-    setReviews({ en, cn });
-    setRefreshCount((prev) => prev + 1);
-    setStep("result");
+    try {
+      const [en, cn] = await Promise.all([
+        generateReview(results, "en"),
+        generateReview(results, "cn"),
+      ]);
+      setReviews({ en, cn });
+      setRefreshCount((prev) => prev + 1);
+      setStep("result");
+    } catch (error) {
+      console.error(error);
+      setStep("error");
+    }
   };
 
   const copyToClipboard = () => {
@@ -783,6 +794,41 @@ export default function App() {
                 <p className="text-sm text-[#555]">
                   Personalizing based on your feedback
                 </p>
+              </div>
+            </m.div>
+          )}
+
+          {/* Error Step */}
+          {step === "error" && (
+            <m.div
+              key="error"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="flex-1 flex flex-col justify-center items-center text-center px-6"
+            >
+              <div className="w-20 h-20 bg-red-100 rounded-[2rem] flex items-center justify-center mb-8 shadow-inner">
+                <span className="text-red-500 text-4xl">⚠️</span>
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-black mb-4 tracking-tight">Oops, something went wrong.</h2>
+              <p className="text-gray-600 mb-10 text-lg leading-relaxed max-w-sm mx-auto">
+                There was an issue generating your review. This might be a temporary network error. Please ask our staff for help if this persists.
+              </p>
+              
+              <div className="w-full space-y-4">
+                <button
+                  onClick={handleGenerate}
+                  className="w-full bg-[#111] text-white py-4 rounded-2xl font-bold text-lg hover:bg-[#333] transition-colors shadow-lg flex items-center justify-center gap-2"
+                >
+                  <RefreshCcw className="w-5 h-5" />
+                  Try Again
+                </button>
+                <button
+                  onClick={confirmRedirect}
+                  className="w-full bg-white text-[#111] py-4 rounded-2xl font-bold text-lg hover:bg-gray-50 transition-colors shadow-sm border border-gray-200"
+                >
+                  Skip & Write Review Manually
+                </button>
               </div>
             </m.div>
           )}
