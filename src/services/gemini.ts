@@ -67,24 +67,40 @@ Critical rules you MUST follow:
     prompt += `\n\n12. CRITICAL INSTRUCTION: The user rejected this previous review you wrote:\n---PREVIOUS---\n${sanitizedPrev}\n---END PREVIOUS---\n\nYou MUST write a completely NEW and UNIQUE review. Use a totally different opening sentence, different phrasing, and different structure. Do not just slightly tweak the old one. Make it sound like a completely different customer wrote it.`;
   }
 
-  try {
-    const { GoogleGenAI } = await import("@google/genai");
-    const ai = new GoogleGenAI({ apiKey });
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: prompt,
-    });
-    const text = response.text?.trim();
-    if (!text) {
-      throw new Error("Empty response from AI");
+  // TEAM_001: Retry with exponential backoff for 429 rate-limit errors.
+  const MAX_RETRIES = 3;
+  const { GoogleGenAI } = await import("@google/genai");
+  const ai = new GoogleGenAI({ apiKey });
+
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: prompt,
+      });
+      const text = response.text?.trim();
+      if (!text) {
+        throw new Error("Empty response from AI");
+      }
+      return text;
+    } catch (error: any) {
+      const is429 = error?.status === 429
+        || error?.message?.includes("429")
+        || error?.message?.includes("RESOURCE_EXHAUSTED");
+
+      if (is429 && attempt < MAX_RETRIES) {
+        // Exponential backoff: 1s, 2s, 4s
+        await new Promise((r) => setTimeout(r, 1000 * Math.pow(2, attempt)));
+        continue;
+      }
+
+      if (import.meta.env.DEV) {
+        console.error("Gemini Error:", error);
+      }
+      throw error;
     }
-    return text;
-  } catch (error: any) {
-    // TEAM_001: Only log full error details in development to avoid leaking
-    // API payloads or internal Google error messages in production DevTools.
-    if (import.meta.env.DEV) {
-      console.error("Gemini Error:", error);
-    }
-    throw error;
   }
+
+  // Should never reach here, but TypeScript needs a return path.
+  throw new Error("Max retries exceeded");
 }

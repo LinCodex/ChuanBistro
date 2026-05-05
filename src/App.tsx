@@ -404,12 +404,18 @@ export default function App() {
     isGenerating.current = true;
     setStep("generating");
     try {
-      const [en, cn] = await Promise.all([
-        generateReview(results, "en"),
-        generateReview(results, "cn"),
-      ]);
-      setReviews({ en, cn });
+      // Generate active language first, show result immediately.
+      // Then fetch the other language in the background to halve burst rate.
+      const primary = await generateReview(results, lang);
+      const otherLang = lang === "en" ? "cn" : "en";
+      setReviews({ en: lang === "en" ? primary : "", cn: lang === "cn" ? primary : "" });
       setStep("result");
+      // Background: generate the other language silently.
+      generateReview(results, otherLang)
+        .then((secondary) => {
+          setReviews((prev) => prev ? { ...prev, [otherLang]: secondary } : prev);
+        })
+        .catch(() => {}); // Non-critical — user can toggle and it will re-try.
     } catch (error) {
       if (import.meta.env.DEV) console.error(error);
       setStep("error");
@@ -425,13 +431,19 @@ export default function App() {
     isGenerating.current = true;
     setStep("generating");
     try {
-      const [en, cn] = await Promise.all([
-        generateReview(results, "en", reviews?.en),
-        generateReview(results, "cn", reviews?.cn),
-      ]);
-      setReviews({ en, cn });
+      const prevReview = reviews ? reviews[lang] : undefined;
+      const primary = await generateReview(results, lang, prevReview || undefined);
+      const otherLang = lang === "en" ? "cn" : "en";
+      setReviews({ en: lang === "en" ? primary : "", cn: lang === "cn" ? primary : "" });
       setRefreshCount((prev) => prev + 1);
       setStep("result");
+      // Background: generate the other language silently.
+      const prevOther = reviews ? reviews[otherLang] : undefined;
+      generateReview(results, otherLang, prevOther || undefined)
+        .then((secondary) => {
+          setReviews((prev) => prev ? { ...prev, [otherLang]: secondary } : prev);
+        })
+        .catch(() => {});
     } catch (error) {
       if (import.meta.env.DEV) console.error(error);
       setStep("error");
