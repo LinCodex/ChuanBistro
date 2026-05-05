@@ -489,9 +489,9 @@ export default function App() {
               exit={{ opacity: 0 }}
               className="flex-1 flex flex-col h-full relative"
             >
-              {/* Full-bleed Video Background for top half */}
+              {/* Full-bleed Video Background for top half (no curved edges) */}
               <div 
-                className="absolute left-1/2 -translate-x-1/2 w-screen z-0 overflow-hidden rounded-b-[2rem] sm:rounded-b-[3.5rem] shadow-2xl bg-[#111]"
+                className="absolute left-1/2 -translate-x-1/2 w-screen z-0 overflow-hidden shadow-2xl bg-[#111]"
                 style={{ 
                   top: "calc(-1 * max(1.5rem, env(safe-area-inset-top)))",
                   height: "50dvh"
@@ -524,8 +524,8 @@ export default function App() {
                 <span className="font-serif font-bold text-[#C5A254] text-lg sm:text-xl tracking-wide drop-shadow-md">三杯叙</span>
               </div>
               
-              {/* Spacer matching video height to push text down */}
-              <div className="relative w-full shrink-0 z-10 pointer-events-none" style={{ height: "calc(50dvh - max(1.5rem, env(safe-area-inset-top)))" }} />
+              {/* Spacer matching original image container layout to push text down exactly where it was */}
+              <div className="relative h-[55dvh] w-full pt-20 px-6 pb-2 mt-4 shrink-0 z-10 pointer-events-none" />
 
               <div className="px-6 sm:px-8 py-8 flex-1 flex flex-col justify-end pb-12 z-10 relative">
                 <m.h1 
