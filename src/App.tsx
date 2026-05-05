@@ -360,19 +360,15 @@ const RatingStep = memo(function RatingStep({
 });
 
 const SUGGESTIONS = [
-  "e.g., The Black Fungus With Wild Pepper was delicious...",
-  "e.g., Really enjoyed the Blood Tofu With Pork Intestines...",
-  "e.g., Braised Pork Tripe With Cordyceps Flowers & Dual Mushrooms was amazing...",
-  "e.g., Loved the Braised String Beans And Eggplant...",
-  "e.g., The Braised Turtle With Two Peppers was so unique...",
-  "e.g., Brown Sugar Glutinous Rice Cake was the perfect dessert...",
-  "e.g., The Cashew Celery was fresh and crunchy...",
-  "e.g., Chive Flower Stir-Fried Fresh Squid was perfectly cooked...",
-  "e.g., The Chongqing Spicy Chicken was flavorful and spicy...",
-  "e.g., Cold Edamame was a great starter...",
-  "e.g., The staff was very attentive...",
-  "e.g., The waiter gave great recommendations...",
-  "e.g., The service was incredibly fast...",
+  "e.g., The Mapo Tofu had the perfect amount of numbing spice...",
+  "e.g., Service was incredibly fast despite being a busy Friday night...",
+  "e.g., The Dan Dan Noodles were rich, savory, and perfectly chewy...",
+  "e.g., I highly recommend the Chongqing Spicy Chicken...",
+  "e.g., The atmosphere was energetic but not too loud...",
+  "e.g., We were seated immediately and the waiter gave great recommendations...",
+  "e.g., The Garlic Pork Belly was thinly sliced and beautifully balanced...",
+  "e.g., Don't miss out on the Brown Sugar Glutinous Rice Cake for dessert...",
+  "e.g., The chili oil wontons were soft, delicate, and packed a great punch...",
 ];
 
 const EMBERS = Array.from({ length: 20 }).map(() => ({
@@ -547,6 +543,9 @@ export default function App() {
               exit={{ opacity: 0 }}
               className="flex-1 flex flex-col h-full overflow-hidden"
             >
+              <div className="absolute top-6 left-6 z-20 font-serif font-bold text-[#111] tracking-wider text-xl bg-white/80 backdrop-blur-md px-5 py-2 rounded-full shadow-sm border border-[#111]/5">
+                Chuan Bistro
+              </div>
               <div className="relative h-[45dvh] w-full mt-6">
                 <m.img 
                   src="/dish1.png" 
@@ -647,7 +646,7 @@ export default function App() {
                     return (
                       <>
                         {/* Question heading */}
-                        <div className="pt-8 pb-6 text-left">
+                        <div className="pt-6 pb-2 text-left">
                           <m.h2
                             initial={{ opacity: 0, y: 12 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -669,9 +668,8 @@ export default function App() {
                         {/* Option cards ??? plain buttons + CSS for entrance,
                             tap, and selection states. No motion components
                             here so taps stay on the compositor thread. */}
-                        <div className="flex-1 flex flex-col justify-center gap-3 my-2">
+                        <div className="flex-1 flex flex-col justify-center gap-4 my-2">
                           {question.options.map((opt, idx) => {
-                            const Icon = opt.icon;
                             const isSelected = selectedValue === opt.value;
                             return (
                               <button
@@ -682,28 +680,18 @@ export default function App() {
                                 style={{
                                   animationDelay: `${0.25 + idx * 0.08}s`,
                                 }}
-                                className={`card-enter relative overflow-hidden flex items-center gap-4 p-5 rounded-2xl border transition-all duration-300 active:scale-[0.97] ${
+                                className={`card-enter relative overflow-hidden flex items-center gap-4 p-6 sm:p-8 rounded-[1.25rem] border transition-all duration-300 active:scale-[0.97] ${
                                   isSelected
                                     ? "bg-white border-[#111] shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
                                     : "bg-white/60 border-transparent hover:bg-white text-[#111] shadow-sm"
                                 }`}
                               >
-                                <div
-                                  className={`relative z-10 shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center transition-all duration-300 ${
-                                    isSelected
-                                      ? "bg-[#111] text-white scale-105"
-                                      : "bg-[#F0EBE1] text-[#555]"
-                                  }`}
-                                >
-                                  <Icon className="w-6 h-6 sm:w-7 sm:h-7" />
-                                </div>
-
                                 <div className="relative z-10 flex-1 min-w-0">
-                                  <p className="text-base sm:text-lg font-bold leading-tight text-[#111]">
+                                  <p className="text-lg sm:text-xl font-bold leading-tight text-[#111]">
                                     {opt.label}
                                   </p>
                                   <p
-                                    className={`text-xs sm:text-sm mt-1 leading-snug ${
+                                    className={`text-sm sm:text-base mt-1.5 leading-snug ${
                                       isSelected
                                         ? "text-[#555]"
                                         : "text-[#777]"
@@ -714,8 +702,8 @@ export default function App() {
                                 </div>
 
                                 {isSelected && (
-                                  <div className="check-badge relative z-10 shrink-0 w-7 h-7 rounded-full bg-[#111] text-white flex items-center justify-center shadow-md">
-                                    <Check className="w-4 h-4" strokeWidth={3} />
+                                  <div className="check-badge relative z-10 shrink-0 w-8 h-8 rounded-full bg-[#111] text-white flex items-center justify-center shadow-md">
+                                    <Check className="w-5 h-5" strokeWidth={3} />
                                   </div>
                                 )}
                               </button>
