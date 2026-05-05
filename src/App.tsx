@@ -515,17 +515,9 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-[100dvh] bg-[#eaeaeb] text-[#1A1A1A] font-sans selection:bg-[#E60000] selection:text-white overflow-x-hidden w-full">
-      {/*
-        Background ??? pure CSS, no React or JS in the animation loop. Two
-        compositor-only blob layers replace the previous four animated
-        blobs + grain overlay (all five used 90-130px blurs which the GPU
-        was re-blurring every frame). See .bg-blob-* in index.css.
-      */}
-      <div className="fixed inset-0 z-0 bg-[#eaeaeb] overflow-hidden pointer-events-none">
-        <div className="bg-blob bg-blob-1" />
-        <div className="bg-blob bg-blob-2" />
-      </div>
+    <div className="relative min-h-[100dvh] text-[#1A1A1A] font-sans selection:bg-[#E60000] selection:text-white overflow-x-hidden w-full">
+      <div className="fixed inset-0 z-0 bg-[url('/2025-12-30.webp')] bg-cover bg-center bg-no-repeat pointer-events-none" />
+      <div className="fixed inset-0 z-0 bg-black/35 pointer-events-none" />
 
       <main
         className="relative z-10 max-w-md sm:max-w-lg md:max-w-2xl mx-auto h-[100dvh] flex flex-col"
