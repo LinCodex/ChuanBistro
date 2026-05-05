@@ -512,12 +512,31 @@ export default function App() {
                   WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)'
                 }}
               >
+                {/* TEAM_001: WeChat in-app browser (X5 on Android, WKWebView
+                    on iOS) blocks standard autoPlay. We add:
+                    - x5-video-player-type / x5-playsinline for Tencent X5 engine
+                    - webkit-playsinline for older iOS WebViews
+                    - poster fallback so the hero isn't blank if play fails
+                    - programmatic .play() via ref as a last resort */}
                 <m.video
+                  ref={(el: HTMLVideoElement | null) => {
+                    if (el) {
+                      // Try programmatic play on mount — catches WeChat/restrictive
+                      // browsers where the autoPlay attribute alone is ignored.
+                      el.play().catch(() => {});
+                    }
+                  }}
                   src="https://chuanbistro.com/wp-content/themes/chuan-bistro/assets/Hero%20Video-C9Qrq4r7.mp4"
+                  poster="https://chuanbistro.com/wp-content/themes/chuan-bistro/assets/bg-1.jpg"
                   autoPlay
                   muted
                   loop
                   playsInline
+                  // @ts-expect-error — WeChat X5 WebView proprietary attributes
+                  webkit-playsinline=""
+                  x5-video-player-type="h5-page"
+                  x5-playsinline=""
+                  x5-video-player-fullscreen="false"
                   className="w-full h-full object-cover"
                   initial={{ scale: 1.05, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
