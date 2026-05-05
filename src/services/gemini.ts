@@ -75,9 +75,9 @@ Critical rules you MUST follow:
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
     try {
       const response = await ai.models.generateContent({
-        // TEAM_001: Use stable gemini-2.5-flash instead of gemini-3-flash-preview.
-        // Preview models have severely restricted free tier rate limits.
-        model: "gemini-2.5-flash",
+        // TEAM_001: gemini-2.5-flash-lite — highest throughput, least likely
+        // to 503. More than enough intelligence for 3-5 sentence reviews.
+        model: "gemini-2.5-flash-lite",
         contents: prompt,
       });
       const text = response.text?.trim();
