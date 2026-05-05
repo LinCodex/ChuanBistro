@@ -532,7 +532,7 @@ export default function App() {
                   initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
                   className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[1.05] text-[#111]"
                 >
-                  Craft your <br/>perfect review.
+                  Craft your perfect<br/>review.
                 </m.h1>
                 
                 <m.div 
