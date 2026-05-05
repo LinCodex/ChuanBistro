@@ -16,7 +16,6 @@ import {
   Star,
   ChevronRight,
   ChevronLeft,
-  ArrowRight,
   Plus,
   RefreshCcw,
   Clipboard,
@@ -516,7 +515,16 @@ export default function App() {
 
   return (
     <div className="relative min-h-[100dvh] text-[#1A1A1A] font-sans selection:bg-[#E60000] selection:text-white overflow-x-hidden w-full">
-      <div className="fixed inset-0 z-0 bg-[url('/2025-12-30.webp')] bg-cover bg-center bg-no-repeat pointer-events-none" />
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <img
+          src="/venue-6-CGLo10ys.png"
+          alt=""
+          aria-hidden="true"
+          className="w-full h-full object-cover"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
       <div className="fixed inset-0 z-0 bg-black/35 pointer-events-none" />
 
       <main
@@ -535,46 +543,31 @@ export default function App() {
             >
               {/* Header */}
               <div className="flex justify-between items-start w-full">
-                <div className="font-semibold tracking-[0.2em] leading-snug text-[10px] sm:text-xs uppercase pt-2 text-[#1A1A1A]">
+                <div className="font-semibold tracking-[0.2em] leading-snug text-[10px] sm:text-xs uppercase pt-2 text-white">
                   <p>Chuan Bistro</p>
                   <p>Review</p>
                 </div>
-                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border border-white/10 bg-[#1A1A1A] flex items-center justify-center text-white shadow-lg z-20">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full border border-[#D4AF37]/20 bg-white flex items-center justify-center text-[#D4AF37] shadow-lg z-20">
                   <span className="text-xl sm:text-2xl font-semibold">叙</span>
                 </div>
               </div>
 
-              {/* Spacer */}
-              <div className="flex-1" />
-
-              {/* Big Text Group */}
-              <div className="flex justify-between items-end mb-8 sm:mb-10 w-full pl-2">
-                <div className="text-[10px] sm:text-xs font-semibold tracking-widest text-[#78716C] pb-2">
-                  {new Date().getFullYear()}
-                </div>
-                <div className="text-right">
-                  <h1 className="text-[40px] sm:text-[56px] md:text-[64px] tracking-tight text-[#111111] leading-[1.05]">
+              <div className="flex-1 flex flex-col items-center justify-center gap-10">
+                <div className="text-center">
+                  <div className="text-[10px] sm:text-xs font-semibold tracking-widest text-white/80 pb-3">
+                    {new Date().getFullYear()}
+                  </div>
+                  <h1 className="text-[40px] sm:text-[56px] md:text-[64px] tracking-tight text-white leading-[1.05]">
                     <span className="block font-medium">CRAFT</span>
                     <span className="block font-medium">YOUR PERFECT</span>
                     <span className="block font-bold">REVIEW</span>
                   </h1>
                 </div>
-              </div>
-
-              {/* Buttons */}
-              <div className="pt-4 flex w-full">
                 <button
                   onClick={goToSurvey}
-                  className="relative overflow-hidden w-full rounded-full bg-[#111111] text-white py-5 sm:py-6 transition-all duration-500 active:scale-[0.98] group font-bold uppercase tracking-[0.2em] text-xs sm:text-sm flex items-center justify-center gap-3 border border-white/5"
+                  className="w-44 h-44 sm:w-52 sm:h-52 rounded-full bg-white text-[#D4AF37] text-3xl sm:text-4xl font-bold uppercase tracking-[0.08em] flex items-center justify-center shadow-2xl shadow-black/25 border border-[#D4AF37]/20 transition-transform duration-300 hover:scale-105 active:scale-95"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-[#E60000] to-[#CC0000] opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0" />
-                  <span className="whitespace-nowrap z-10">Start Crafting</span>
-                  
-                  <div className="w-6 h-5 relative z-10 flex items-center justify-center shrink-0">
-                    <div className="arrow-bounce">
-                      <ArrowRight className="w-5 h-5 shrink-0" />
-                    </div>
-                  </div>
+                  <span className="leading-none">Review</span>
                 </button>
               </div>
             </m.div>
