@@ -481,7 +481,7 @@ export default function App() {
 
   const confirmRedirect = () => {
     window.open(
-      "https://www.google.com/maps/search/?api=1&query=Chuan+Bistro+135-21A+37th+Ave+Flushing+NY+11354",
+      "https://reviewthis.biz/chuanbistro",
       "_blank",
     );
     setShowRedirectModal(false);
