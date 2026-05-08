@@ -502,20 +502,20 @@ export default function App() {
   return (
     <div className="relative min-h-[100dvh] text-[#111] font-sans selection:bg-[#DC2626] selection:text-white overflow-x-hidden w-full bg-[#FAF5ED]">
       {/* Global Language Toggle */}
-      <div className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50">
+      <div className="absolute top-6 right-6 sm:top-8 sm:right-8 z-50">
         <div className="relative">
           <select
             value={lang}
             onChange={(e) => handleLanguageChange(e.target.value as Lang)}
-            className="appearance-none flex items-center gap-2 pl-10 pr-8 py-2 bg-white/80 backdrop-blur-md rounded-full text-sm font-bold text-[#111] hover:bg-white transition-colors shadow-md border border-white/40 outline-none cursor-pointer"
+            className="appearance-none flex items-center gap-1.5 pl-8 pr-6 py-1.5 bg-white/80 backdrop-blur-md rounded-full text-xs font-bold text-[#111] hover:bg-white transition-colors shadow-md border border-white/40 outline-none cursor-pointer"
           >
             <option value="en">English</option>
             <option value="cn">中文</option>
             <option value="es">Español</option>
           </select>
-          <Languages className="w-4 h-4 sm:w-5 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#111]" />
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#111]">
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <Languages className="w-3.5 h-3.5 sm:w-4 sm:h-4 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#111]" />
+          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#111]">
+            <svg width="8" height="5" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
@@ -598,12 +598,12 @@ export default function App() {
               </div>
               
               {/* Spacer matching original image container layout to push text down exactly where it was */}
-              <div className="relative h-[55dvh] w-full pt-20 px-6 pb-2 mt-4 shrink-0 z-10 pointer-events-none" />
+              <div className="relative h-[45dvh] sm:h-[55dvh] w-full pt-20 px-6 pb-2 mt-4 shrink-0 z-10 pointer-events-none" />
 
-              <div className="px-6 sm:px-8 py-8 flex-1 flex flex-col justify-end pb-12 z-10 relative">
+              <div className="px-6 sm:px-8 py-4 sm:py-8 flex-1 flex flex-col justify-end pb-6 sm:pb-12 z-10 relative">
                 <m.h1 
                   initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}
-                  className="text-[clamp(2.2rem,8.5vw,3rem)] min-[400px]:text-5xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[1.05] text-[#111]"
+                  className="text-[clamp(2rem,8vw,3rem)] min-[400px]:text-4xl sm:text-6xl md:text-7xl font-black tracking-tighter leading-[1.05] text-[#111]"
                 >
                   {t[lang].welcomeTitle1}<br/>{t[lang].welcomeTitle2}
                 </m.h1>
