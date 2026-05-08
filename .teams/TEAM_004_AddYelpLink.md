@@ -11,9 +11,12 @@
 - Google: `https://reviewthis.biz/chuanbistro`
 
 ## Progress
-- [ ] Created team file
-- [ ] Update `translations.ts` to include Google and Yelp specific strings.
-- [ ] Update `App.tsx` state to track `redirectTarget`.
-- [ ] Update `App.tsx` error step buttons.
-- [ ] Update `App.tsx` result step buttons.
-- [ ] Verify build and styling.
+- [x] Created team file
+- [x] Update `translations.ts` to include Google and Yelp specific strings.
+- [x] Update `App.tsx` state to track `redirectTarget`.
+- [x] Update `App.tsx` error step buttons.
+- [x] Update `App.tsx` result step buttons.
+- [x] Verify build and styling.
+
+## Summary
+Successfully integrated Yelp! The UI was updated in both the final result page and the error page to prominently feature Google Maps and Yelp buttons side-by-side. The modal popup handles customized messaging appropriately for each platform, and all changes have been pushed to GitHub.
