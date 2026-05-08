@@ -528,8 +528,8 @@ export default function App() {
             exit={{ opacity: 0 }}
             className="absolute top-[-50vh] inset-x-0 w-full h-[105dvh] z-0 pointer-events-none"
             style={{ 
-              maskImage: 'linear-gradient(to bottom, black calc(100% - 20dvh), transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, black calc(100% - 20dvh), transparent 100%)'
+              maskImage: 'linear-gradient(to bottom, black calc(100% - 10dvh), transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, black calc(100% - 10dvh), transparent 100%)'
             }}
           >
             <m.img
