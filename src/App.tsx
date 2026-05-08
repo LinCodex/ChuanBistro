@@ -27,6 +27,21 @@ import {
 import { generateReview, SurveyResults } from "./services/gemini";
 import { t, Lang, getInitialLang } from "./translations";
 
+const GoogleIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 48 48" className={className}>
+    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"/>
+    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+  </svg>
+);
+
+const YelpIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 384 512" fill="currentColor" className={className}>
+    <path d="M42.3 226.5c-27.1-7-39.7 13.3-39.7 33.7v30.4c0 18.5 13.1 35.1 31.6 37.1l111 11.9c13.7 1.5 25.1-9 25.1-22.8 0-11.4-8.1-22-18.4-24.8l-109.6-65.5zm102.5-45.7l-47-104.9c-8-17.6-26.6-23.7-41.9-13.6-13.7 9-21.7 24-21.7 40.5v19.4c0 14.3 8.3 27.2 21.4 32.8l100.8 42.9c12.4 5.3 26.6-1.5 28.5-14.8.9-6.4-1.8-12.8-7.2-16.7l-32.9-25.6zM375.4 362l-90.8-59.5c-11.8-7.7-28 2.1-26.2 16.1.9 6.4 5 11.9 10.9 14.6l98.9 44.9c16.3 7.4 35-2.2 35.5-20.1.2-6.5-2.3-12.8-6.9-17.5L375.4 362zm-22.3-118c-18.4-2-34.9 10.9-38.3 29L301 384.8c-2.7 13.5 7.8 25.6 21.6 25.6 10 0 18.6-6.6 21.1-16.3l38.8-110.1c4.5-17.6-5.8-35.4-23.5-40zM221 217.1c11.6-7.8 14-23.8 5.2-34.4L150.3 93c-11.5-13.8-32.6-12.8-42.7 2-6.3 9.3-6.5 21.7-.5 31l75.4 116.5c7.8 12.1 24.3 14 36.3 4.2l2.2-2.1V217.1z"/>
+  </svg>
+);
+
 // Stable inline style for <main> so React doesn't allocate a fresh object on
 // every render. The `max(...)` keeps a 1.5rem default on devices without
 // safe-area insets (desktop, older phones).
@@ -889,15 +904,15 @@ export default function App() {
                   <div className="flex gap-3">
                     <button
                       onClick={() => confirmRedirect('google')}
-                      className="flex-1 bg-white text-[#111] py-4 rounded-2xl font-bold text-base hover:bg-gray-50 transition-colors shadow-sm border border-gray-200 flex justify-center items-center gap-2"
+                      className="flex-1 bg-white py-4 rounded-2xl flex justify-center items-center active:scale-95 transition-all shadow-sm hover:shadow-md border border-gray-200"
                     >
-                      Google Maps <ExternalLink className="w-4 h-4" />
+                      <GoogleIcon className="w-7 h-7" />
                     </button>
                     <button
                       onClick={() => confirmRedirect('yelp')}
-                      className="flex-1 bg-white text-[#111] py-4 rounded-2xl font-bold text-base hover:bg-gray-50 transition-colors shadow-sm border border-gray-200 flex justify-center items-center gap-2"
+                      className="flex-1 bg-[#E00707] py-4 rounded-2xl flex justify-center items-center active:scale-95 transition-all shadow-sm hover:shadow-md"
                     >
-                      Yelp <ExternalLink className="w-4 h-4" />
+                      <YelpIcon className="w-7 h-7 text-white" />
                     </button>
                   </div>
                 </div>
@@ -991,17 +1006,15 @@ export default function App() {
                 <div className="w-full pt-2 mt-auto flex gap-3">
                   <button
                     onClick={() => handleRedirect('google')}
-                    className="flex-1 bg-[#111] text-white py-4 rounded-[1.25rem] font-bold text-base sm:text-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg"
+                    className="flex-1 bg-white border border-[#E5E5E5] py-4 rounded-[1.25rem] flex items-center justify-center active:scale-95 transition-all shadow-md hover:shadow-lg"
                   >
-                    Google Maps
-                    <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <GoogleIcon className="w-8 h-8" />
                   </button>
                   <button
                     onClick={() => handleRedirect('yelp')}
-                    className="flex-1 bg-[#E00707] text-white py-4 rounded-[1.25rem] font-bold text-base sm:text-lg flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg"
+                    className="flex-1 bg-[#E00707] py-4 rounded-[1.25rem] flex items-center justify-center active:scale-95 transition-all shadow-md hover:shadow-lg"
                   >
-                    Yelp
-                    <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <YelpIcon className="w-8 h-8 text-white" />
                   </button>
                 </div>
               </div>
