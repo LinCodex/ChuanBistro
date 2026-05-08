@@ -516,21 +516,38 @@ export default function App() {
 
   return (
     <div className="relative min-h-[100dvh] text-[#111] font-sans selection:bg-[#DC2626] selection:text-white overflow-x-hidden w-full bg-[#FAF5ED]">
-      {/* Global Language Toggle */}
-      <div className="absolute top-6 right-6 sm:top-8 sm:right-8 z-50">
-        <div className="relative">
+      {/* Global Header */}
+      <div 
+        className="absolute top-0 inset-x-0 z-50 flex justify-between items-center px-6 sm:px-8 pointer-events-none"
+        style={{ paddingTop: "max(1.5rem, env(safe-area-inset-top))" }}
+      >
+        <AnimatePresence>
+          {step === "welcome" && (
+            <m.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex items-baseline gap-1.5 sm:gap-2 pointer-events-auto shrink-0"
+            >
+              <span className="font-serif font-extrabold text-white tracking-widest text-lg sm:text-2xl uppercase drop-shadow-md">Chuan Bistro</span>
+              <span className="font-serif font-bold text-[#C5A254] text-base sm:text-xl tracking-wide drop-shadow-md">三杯叙</span>
+            </m.div>
+          )}
+        </AnimatePresence>
+
+        <div className="relative pointer-events-auto ml-auto shrink-0">
           <select
             value={lang}
             onChange={(e) => handleLanguageChange(e.target.value as Lang)}
-            className="appearance-none flex items-center gap-1.5 pl-8 pr-6 py-1.5 bg-white/80 backdrop-blur-md rounded-full text-xs font-bold text-[#111] hover:bg-white transition-colors shadow-md border border-white/40 outline-none cursor-pointer"
+            className="appearance-none flex items-center gap-1.5 pl-7 pr-5 py-1 bg-white/80 backdrop-blur-md rounded-full text-[10px] sm:text-xs font-bold text-[#111] hover:bg-white transition-colors shadow-md border border-white/40 outline-none cursor-pointer"
           >
             <option value="en">English</option>
             <option value="cn">中文</option>
             <option value="es">Español</option>
           </select>
-          <Languages className="w-3.5 h-3.5 sm:w-4 sm:h-4 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#111]" />
-          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#111]">
-            <svg width="8" height="5" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <Languages className="w-3 h-3 sm:w-3.5 sm:h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#111]" />
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-[#111]">
+            <svg width="6" height="4" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
@@ -555,8 +572,9 @@ export default function App() {
               <div 
                 className="absolute left-1/2 -translate-x-1/2 w-screen z-0"
                 style={{ 
-                  top: "calc(-1 * max(1.5rem, env(safe-area-inset-top)))",
-                  height: "55dvh",
+                  top: 0,
+                  marginTop: "calc(-50px - max(1.5rem, env(safe-area-inset-top)))",
+                  height: "calc(55dvh + 50px)",
                   maskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)',
                   WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent 100%)'
                 }}
@@ -605,11 +623,6 @@ export default function App() {
                   }}
                 />
                 <div className="absolute top-0 inset-x-0 h-[40%] bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
-              </div>
-
-              <div className="absolute top-6 inset-x-0 px-6 sm:top-8 sm:px-8 z-20 flex items-baseline gap-2">
-                <span className="font-serif font-extrabold text-white tracking-widest text-xl sm:text-2xl uppercase drop-shadow-md">Chuan Bistro</span>
-                <span className="font-serif font-bold text-[#C5A254] text-lg sm:text-xl tracking-wide drop-shadow-md">三杯叙</span>
               </div>
               
               {/* Spacer matching original image container layout to push text down exactly where it was */}
