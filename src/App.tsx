@@ -343,6 +343,8 @@ export default function App() {
   const [refreshCount, setRefreshCount] = useState(0);
   const [isCopying, setIsCopying] = useState(false);
   const [showRedirectModal, setShowRedirectModal] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
   const [redirectTarget, setRedirectTarget] = useState<'google' | 'yelp'>('google');
   const [suggestionIdx, setSuggestionIdx] = useState(0);
   const [surveyIndex, setSurveyIndex] = useState(0);
@@ -590,23 +592,50 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        <div className="relative pointer-events-auto ml-auto shrink-0" style={{ WebkitTapHighlightColor: "transparent" }}>
-          <select
-            value={lang}
-            onChange={(e) => handleLanguageChange(e.target.value as Lang)}
+        <div ref={langRef} className="relative pointer-events-auto ml-auto shrink-0" style={{ WebkitTapHighlightColor: "transparent" }}>
+          <button
+            type="button"
+            onClick={() => setLangOpen((v) => !v)}
+            className="flex items-center gap-1.5 pl-7 pr-5 py-1 bg-white/80 backdrop-blur-md rounded-full text-[10px] sm:text-xs font-bold text-[#111] shadow-md border border-white/40 outline-none cursor-pointer select-none"
             style={{ WebkitTapHighlightColor: "transparent" }}
-            className="appearance-none flex items-center gap-1.5 pl-7 pr-5 py-1 bg-white/80 backdrop-blur-md rounded-full text-[10px] sm:text-xs font-bold text-[#111] shadow-md border border-white/40 outline-none cursor-pointer focus:outline-none focus:ring-0"
           >
-            <option value="en">English</option>
-            <option value="cn">中文</option>
-            <option value="es">Español</option>
-          </select>
-          <Languages className="w-3 h-3 sm:w-3.5 sm:h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#111]" />
-          <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-[#111]">
-            <svg width="6" height="4" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <Languages className="w-3 h-3 sm:w-3.5 sm:h-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#111]" />
+            {{en: "English", cn: "中文", es: "Español"}[lang]}
+            <svg className={`ml-0.5 transition-transform duration-200 ${langOpen ? "rotate-180" : ""}`} width="6" height="4" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-          </div>
+          </button>
+
+          {/* Custom dropdown menu */}
+          <AnimatePresence>
+            {langOpen && (
+              <>
+                {/* Invisible backdrop to close menu on outside tap */}
+                <div className="fixed inset-0 z-40" onClick={() => setLangOpen(false)} />
+                <m.div
+                  initial={{ opacity: 0, scale: 0.9, y: -4 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: -4 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-full mt-1.5 z-50 bg-white/90 backdrop-blur-xl rounded-xl shadow-xl border border-white/50 overflow-hidden min-w-[100px]"
+                >
+                  {(["en", "cn", "es"] as Lang[]).map((l) => (
+                    <button
+                      key={l}
+                      type="button"
+                      onClick={() => { handleLanguageChange(l); setLangOpen(false); }}
+                      className={`w-full text-left px-4 py-2 text-xs sm:text-sm font-semibold transition-colors ${
+                        lang === l ? "bg-[#111] text-white" : "text-[#111] hover:bg-black/5 active:bg-black/10"
+                      }`}
+                      style={{ WebkitTapHighlightColor: "transparent" }}
+                    >
+                      {{en: "English", cn: "中文", es: "Español"}[l]}
+                    </button>
+                  ))}
+                </m.div>
+              </>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
